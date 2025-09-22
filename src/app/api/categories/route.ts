@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { blogService, supabaseAdmin } from '@/lib/supabase'
 
-// GET /api/categories - 获取所有分类
+// GET /api/categories - Get all categories
 export async function GET() {
   try {
     const categories = await blogService.getCategories()
@@ -15,7 +15,7 @@ export async function GET() {
   }
 }
 
-// POST /api/categories - 创建新分类
+// POST /api/categories - Create new category
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // 生成 slug
+    // Generate slug
     const slug = body.slug || body.name
       .toLowerCase()
       .replace(/[^\w\s-]/g, '')

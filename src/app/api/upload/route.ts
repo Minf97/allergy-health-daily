@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { storageService } from '@/lib/supabase'
 
-// POST /api/upload - 上传图片
+// POST /api/upload - Upload image
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData()
@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // 验证文件类型
+    // Validate file type
     if (!file.type.startsWith('image/')) {
       return NextResponse.json(
         { error: 'Only image files are allowed' },
@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // 验证文件大小 (最大 5MB)
+    // Validate file size (max 5MB)
     const maxSize = 5 * 1024 * 1024; // 5MB
     if (file.size > maxSize) {
       return NextResponse.json(
@@ -31,14 +31,14 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // 生成唯一文件名
+    // Generate unique filename
     const timestamp = Date.now()
     const filename = `${timestamp}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '')}`
 
-    // 上传到 Supabase Storage
+    // Upload to Supabase Storage
     await storageService.uploadImage(file, filename)
 
-    // 获取公共 URL
+    // Get public URL
     const publicUrl = storageService.getPublicUrl(filename)
 
     return NextResponse.json({
@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-// DELETE /api/upload - 删除图片
+// DELETE /api/upload - Delete image
 export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)

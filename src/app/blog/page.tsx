@@ -3,15 +3,15 @@ import { BlogGrid, CategoryTag } from '@/components/blog';
 import { blogService } from '@/lib/supabase';
 import { BlogPost, BlogCategory } from '@/types/blog';
 
-// 获取博客数据和分类
+// Get blog data and categories
 async function getBlogData() {
   try {
     const [blogsResponse, categories] = await Promise.all([
-      blogService.getPublishedBlogs(1, 50), // 获取前50篇博客
+      blogService.getPublishedBlogs(1, 50), // Get first 50 blogs
       blogService.getCategories()
     ]);
 
-    // 转换数据格式以适配现有组件
+    // Transform data format to adapt existing components
     const transformedBlogs = blogsResponse.blogs.map(blog => ({
       title: blog.title,
       excerpt: blog.excerpt || '',
@@ -30,7 +30,7 @@ async function getBlogData() {
     };
   } catch (error) {
     console.error('Error fetching blog data:', error);
-    // 返回空数据，避免页面崩溃
+    // Return empty data to avoid page crash
     return {
       blogs: [],
       categories: ['All Posts']
@@ -78,7 +78,7 @@ export default async function BlogPage() {
           </div>
         )}
 
-        {/* Load More Button - 可以后续实现分页 */}
+        {/* Load More Button - can implement pagination later */}
         {blogs.length >= 50 && (
           <div className="text-center mt-12">
             <button className="btn-primary">

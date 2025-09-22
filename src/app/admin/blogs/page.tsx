@@ -49,7 +49,7 @@ export default function AdminBlogsPage() {
         throw new Error('Failed to delete blog')
       }
 
-      // 重新加载列表
+      // Reload list
       await loadBlogs()
       alert('Blog deleted successfully')
     } catch (error: any) {
@@ -74,7 +74,7 @@ export default function AdminBlogsPage() {
         throw new Error('Failed to update blog status')
       }
 
-      // 重新加载列表
+      // Reload list
       await loadBlogs()
     } catch (error: any) {
       console.error('Error updating blog status:', error)

@@ -1,11 +1,11 @@
 import { createClient } from '@supabase/supabase-js'
 import { Database, BlogPost } from '@/types/blog'
 
-// Supabase 配置
+// Supabase configuration
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
-// 创建 Supabase 客户端
+// Create Supabase client
 export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
   auth: {
     persistSession: true,
@@ -13,7 +13,7 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
   },
 })
 
-// 管理员客户端 (用于服务端操作)
+// Admin client (for server-side operations)
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
 
 export const supabaseAdmin = createClient<Database>(
@@ -27,9 +27,9 @@ export const supabaseAdmin = createClient<Database>(
   }
 )
 
-// 博客相关的 Supabase 工具函数
+// Blog-related Supabase utility functions
 export const blogService = {
-  // 获取所有已发布的博客
+  // Get all published blogs
   async getPublishedBlogs(page = 1, pageSize = 10) {
     const from = (page - 1) * pageSize
     const to = from + pageSize - 1
@@ -54,7 +54,7 @@ export const blogService = {
     }
   },
 
-  // 根据 slug 获取博客
+  // Get blog by slug
   async getBlogBySlug(slug: string): Promise<BlogPost | null> {
     const { data, error } = await supabase
       .from('blogs')
@@ -76,7 +76,7 @@ export const blogService = {
     return data as BlogPost
   },
 
-  // 获取所有分类
+  // Get all categories
   async getCategories() {
     const { data, error } = await supabase
       .from('blog_categories')
@@ -87,7 +87,7 @@ export const blogService = {
     return data || []
   },
 
-  // 根据分类获取博客
+  // Get blogs by category
   async getBlogsByCategory(categorySlug: string, page = 1, pageSize = 10) {
     const from = (page - 1) * pageSize
     const to = from + pageSize - 1
@@ -114,9 +114,9 @@ export const blogService = {
   }
 }
 
-// 管理员博客操作 (需要认证)
+// Admin blog operations (requires authentication)
 export const adminBlogService = {
-  // 创建博客
+  // Create blog
   async createBlog(blogData: Database['public']['Tables']['blogs']['Insert']) {
     const { data, error } = await supabaseAdmin
       .from('blogs')
@@ -131,7 +131,7 @@ export const adminBlogService = {
     return data
   },
 
-  // 更新博客
+  // Update blog
   async updateBlog(id: string, blogData: Database['public']['Tables']['blogs']['Update']) {
     const { data, error } = await supabaseAdmin
       .from('blogs')
@@ -147,7 +147,7 @@ export const adminBlogService = {
     return data
   },
 
-  // 删除博客
+  // Delete blog
   async deleteBlog(id: string) {
     const { error } = await supabaseAdmin
       .from('blogs')
@@ -157,7 +157,7 @@ export const adminBlogService = {
     if (error) throw error
   },
 
-  // 获取所有博客 (包括草稿)
+  // Get all blogs (including drafts)
   async getAllBlogs(page = 1, pageSize = 10) {
     const from = (page - 1) * pageSize
     const to = from + pageSize - 1
@@ -181,7 +181,7 @@ export const adminBlogService = {
     }
   },
 
-  // 根据 ID 获取博客 (包括草稿)
+  // Get blog by ID (including drafts)
   async getBlogById(id: string) {
     const { data, error } = await supabaseAdmin
       .from('blogs')
@@ -197,9 +197,9 @@ export const adminBlogService = {
   }
 }
 
-// 存储相关工具
+// Storage-related utilities
 export const storageService = {
-  // 上传图片
+  // Upload image
   async uploadImage(file: File, path: string) {
     const { data, error } = await supabase.storage
       .from('blog-images')
@@ -212,7 +212,7 @@ export const storageService = {
     return data
   },
 
-  // 获取图片公共 URL
+  // Get image public URL
   getPublicUrl(path: string) {
     const { data } = supabase.storage
       .from('blog-images')
@@ -221,7 +221,7 @@ export const storageService = {
     return data.publicUrl
   },
 
-  // 删除图片
+  // Delete image
   async deleteImage(path: string) {
     const { error } = await supabase.storage
       .from('blog-images')

@@ -39,7 +39,7 @@ export default function BlogEditorPage() {
   const autoSaveRef = useRef<NodeJS.Timeout | null>(null)
   const [lastSaved, setLastSaved] = useState<Date | null>(null)
 
-  // 加载分类和数据
+  // Load categories and data
   useEffect(() => {
     loadCategories()
     if (isEditMode && blogId) {
@@ -49,7 +49,7 @@ export default function BlogEditorPage() {
     }
   }, [blogId])
 
-  // 自动保存
+  // Auto save functionality
   useEffect(() => {
     if (autoSaveRef.current) {
       clearInterval(autoSaveRef.current)
@@ -66,7 +66,7 @@ export default function BlogEditorPage() {
     }
   }, [formData])
 
-  // 页面卸载时保存到缓存
+  // Save to cache on page unload
   useEffect(() => {
     const handleBeforeUnload = () => {
       saveToCache()
@@ -119,7 +119,7 @@ export default function BlogEditorPage() {
     }
   }
 
-  // 自动生成 slug
+  // Auto generate slug
   const generateSlug = (title: string) => {
     return title
       .toLowerCase()
@@ -140,9 +140,9 @@ export default function BlogEditorPage() {
     setFormData(prev => ({ ...prev, content }))
   }
 
-  // 保存到本地存储
+  // Save to local storage
   const saveToCache = useCallback(() => {
-    // 在编辑模式下不使用缓存功能
+    // Don't use cache in edit mode
     if (isEditMode) return
     
     try {
@@ -159,16 +159,16 @@ export default function BlogEditorPage() {
     }
   }, [formData, cacheKey, isEditMode])
 
-  // 从本地存储加载
+  // Load from local storage
   const loadFromCache = useCallback(() => {
-    // 在编辑模式下不从缓存加载
+    // Don't load from cache in edit mode
     if (isEditMode) return
     
     try {
       const cached = localStorage.getItem(cacheKey)
       if (cached) {
         const cachedData = JSON.parse(cached)
-        // 只在有内容时恢复
+        // Only restore when content exists
         if (cachedData.title || cachedData.content) {
           setFormData({
             title: cachedData.title || '',
@@ -191,7 +191,7 @@ export default function BlogEditorPage() {
     }
   }, [cacheKey, isEditMode])
 
-  // 清除缓存
+  // Clear cache
   const clearCache = useCallback(() => {
     try {
       localStorage.removeItem(cacheKey)
@@ -201,7 +201,7 @@ export default function BlogEditorPage() {
     }
   }, [cacheKey])
 
-  // 手动保存草稿
+  // Manual save draft
   const handleSaveDraft = useCallback(() => {
     if (isEditMode) {
       alert('Changes are automatically saved when editing. Use "Save Changes" to persist updates.')
@@ -230,11 +230,11 @@ export default function BlogEditorPage() {
   }
 
   const handleSave = async (status: 'draft' | 'published') => {
-    // 从编辑器获取最新内容
+    // Get latest content from editor
     const currentContent = editorRef.current?.getJSON() || formData.content
     const updatedFormData = { ...formData, content: currentContent }
 
-    // 验证表单
+    // Validate form
     const newErrors: Record<string, string> = {}
 
     if (!updatedFormData.title.trim()) {
@@ -271,7 +271,7 @@ export default function BlogEditorPage() {
 
       let response
       if (isEditMode && blogId) {
-        // 更新现有博客
+        // Update existing blog
         response = await fetch(`/api/blogs/${blogId}`, {
           method: 'PUT',
           headers: {
@@ -280,7 +280,7 @@ export default function BlogEditorPage() {
           body: JSON.stringify(blogData),
         })
       } else {
-        // 创建新博客
+        // Create new blog
         response = await fetch('/api/blogs', {
           method: 'POST',
           headers: {
@@ -297,7 +297,7 @@ export default function BlogEditorPage() {
 
       const result = await response.json()
       
-      // 保存成功后清除缓存 (只在非编辑模式下)
+      // Clear cache after successful save (only in create mode)
       if (!isEditMode) {
         clearCache()
       }
@@ -305,11 +305,11 @@ export default function BlogEditorPage() {
       const action = isEditMode ? 'updated' : (status === 'published' ? 'published' : 'saved')
       alert(`Blog ${action} successfully!`)
       
-      // 重定向到博客详情页或列表页
+      // Redirect to blog detail or list page
       if (status === 'published' && !isEditMode) {
         router.push(`/blog/${result.slug}`)
       } else {
-        // 重定向到管理页面
+        // Redirect to admin page
         router.push('/admin/blogs')
       }
     } catch (error: any) {

@@ -1,9 +1,9 @@
-// 单篇博客迁移脚本 - "Can Feeding Egg Powder Help With Cat Allergies?"
-// 运行方式: node scripts/migrate-single-blog.js
+// Single blog migration script - "Can Feeding Egg Powder Help With Cat Allergies?"
+// Usage: node scripts/migrate-single-blog.js
 
 const { supabaseAdmin } = require('../src/lib/supabase')
 
-// 将 HTML 博客转换为 Tiptap JSON 格式的数据
+// Convert HTML blog to Tiptap JSON format data
 const blogData = {
   title: 'Can Feeding Egg Powder Help With Cat Allergies?',
   excerpt: 'A look at the science behind feeding egg powder to cats with allergies, and whether it actually works.',
@@ -291,7 +291,7 @@ async function migrateSingleBlog() {
   console.log(`📰 Blog: "${blogData.title}"`)
 
   try {
-    // 1. 验证环境变量
+    // 1. Validate environment variables
     console.log('🔍 Checking environment variables...')
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
     const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -301,7 +301,7 @@ async function migrateSingleBlog() {
     }
     console.log('  ✅ Environment variables confirmed')
 
-    // 2. 测试数据库连接
+    // 2. Test database connection
     console.log('🔗 Testing database connection...')
     const { data: testConnection, error: connectionError } = await supabaseAdmin
       .from('blog_categories')
@@ -313,7 +313,7 @@ async function migrateSingleBlog() {
     }
     console.log('  ✅ Database connection successful')
 
-    // 3. 检查或创建分类
+    // 3. Check or create category
     console.log('📂 Processing category...')
     const categorySlug = blogData.category.toLowerCase().replace(/[^\w\s-]/g, '').replace(/[\s_-]+/g, '-')
     
@@ -343,7 +343,7 @@ async function migrateSingleBlog() {
       console.log(`  ➕ Created category "${blogData.category}"`)
     }
 
-    // 4. 检查博客是否已存在
+    // 4. Check if blog already exists
     console.log('📝 Checking if blog already exists...')
     const { data: existingBlog } = await supabaseAdmin
       .from('blogs')
@@ -384,7 +384,7 @@ async function migrateSingleBlog() {
     console.log(`     - Slug: ${newBlog.slug}`)
     console.log(`     - Status: ${newBlog.status}`)
 
-    // 6. 验证迁移结果
+    // 6. Verify migration results
     console.log('🔍 Verifying migration...')
     
     const { data: verifyBlog, error: verifyError } = await supabaseAdmin
@@ -414,7 +414,7 @@ async function migrateSingleBlog() {
   }
 }
 
-// 运行迁移
+// Run migration
 if (require.main === module) {
   migrateSingleBlog()
     .then(() => {

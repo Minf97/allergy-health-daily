@@ -6,7 +6,7 @@ interface RouteParams {
   params: { id: string }
 }
 
-// GET /api/blogs/[id] - 获取单个博客
+// GET /api/blogs/[id] - Get single blog
 export async function GET(
   request: NextRequest,
   { params }: RouteParams
@@ -19,11 +19,11 @@ export async function GET(
     let result
 
     if (includeAll) {
-      // 管理员获取 (包括草稿)
+      // Admin access (including drafts)
       result = await adminBlogService.getBlogById(id)
     } else {
-      // 公开获取 (只有已发布的)
-      result = await blogService.getBlogBySlug(id) // 这里假设传入的是 slug
+      // Public access (published only)
+      result = await blogService.getBlogBySlug(id) // Assuming passed in as slug
     }
 
     if (!result) {
@@ -43,7 +43,7 @@ export async function GET(
   }
 }
 
-// PUT /api/blogs/[id] - 更新博客
+// PUT /api/blogs/[id] - Update blog
 export async function PUT(
   request: NextRequest,
   { params }: RouteParams
@@ -52,7 +52,7 @@ export async function PUT(
     const { id } = params
     const body: Partial<BlogFormData> = await request.json()
 
-    // 准备更新数据
+    // Prepare update data
     const updateData: any = {}
     
     if (body.title) updateData.title = body.title
@@ -85,7 +85,7 @@ export async function PUT(
   }
 }
 
-// DELETE /api/blogs/[id] - 删除博客
+// DELETE /api/blogs/[id] - Delete blog
 export async function DELETE(
   request: NextRequest,
   { params }: RouteParams

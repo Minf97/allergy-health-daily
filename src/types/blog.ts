@@ -1,4 +1,4 @@
-// Supabase 数据库类型定义
+// Supabase database type definitions
 export interface Database {
   public: {
     Tables: {
@@ -76,7 +76,7 @@ export interface Database {
   }
 }
 
-// 博客相关类型
+// Blog-related types
 export interface BlogPost {
   id: string
   title: string
@@ -102,7 +102,7 @@ export interface BlogCategory {
   updated_at: string
 }
 
-// API 响应类型
+// API response types
 export interface BlogsResponse {
   blogs: BlogPost[]
   total: number
@@ -110,7 +110,7 @@ export interface BlogsResponse {
   pageSize: number
 }
 
-// 创建/编辑博客的表单数据
+// Form data for creating/editing blogs
 export interface BlogFormData {
   title: string
   slug: string

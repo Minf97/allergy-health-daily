@@ -12,7 +12,7 @@ interface BlogPostPageProps {
   }>;
 }
 
-// 动态生成 metadata
+// Dynamically generate metadata
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
   try {
     const { slug } = await params;
@@ -61,7 +61,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   }
 }
 
-// 将 Tiptap JSON 内容转换为 HTML
+// Convert Tiptap JSON content to HTML
 function tiptapToHtml(content: any): string {
   if (!content || !content.content) return '';
   
@@ -177,7 +177,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
       notFound();
     }
 
-    // 转换内容格式
+    // Convert content format
     const htmlContent = post.html_content || tiptapToHtml(post.content);
     const publishDate = new Date(post.created_at).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -258,7 +258,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   }
 }
 
-// 相关文章组件
+// Related articles component
 async function RelatedPosts({ categoryId, currentSlug }: { 
   categoryId: string | null; 
   currentSlug: string;
@@ -266,7 +266,7 @@ async function RelatedPosts({ categoryId, currentSlug }: {
   if (!categoryId) return null;
 
   try {
-    // 获取同分类的其他文章
+    // Get other articles in the same category
     const { blogs } = await blogService.getPublishedBlogs(1, 10);
     const relatedPosts = blogs
       .filter(blog => blog.category_id === categoryId && blog.slug !== currentSlug)
@@ -320,10 +320,10 @@ async function RelatedPosts({ categoryId, currentSlug }: {
   }
 }
 
-// 生成静态路径 - 现在从数据库获取
+// Generate static paths - now from database
 export async function generateStaticParams() {
   try {
-    const { blogs } = await blogService.getPublishedBlogs(1, 100); // 获取前100篇文章
+    const { blogs } = await blogService.getPublishedBlogs(1, 100); // Get first 100 articles
     return blogs.map((blog) => ({
       slug: blog.slug,
     }));

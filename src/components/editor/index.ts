@@ -1,3 +1,3 @@
-// 编辑器组件导出
+// Editor component exports
 export { TiptapEditor } from './TiptapEditor'
 export { ImageUpload } from './ImageUpload'

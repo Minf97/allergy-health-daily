@@ -184,7 +184,7 @@ export function BlogEditor({ content, onChange, onImageUpload }: BlogEditorProps
   >("main")
   const toolbarRef = useRef<HTMLDivElement>(null)
 
-  // 自定义图片上传函数，如果提供了 onImageUpload 则使用它
+  // Custom image upload function, use onImageUpload if provided
   const customImageUpload = onImageUpload || handleImageUpload
 
   const editor = useEditor({
@@ -236,7 +236,7 @@ export function BlogEditor({ content, onChange, onImageUpload }: BlogEditorProps
     overlayHeight: toolbarRef.current?.getBoundingClientRect().height ?? 0,
   })
 
-  // 监听内容变化，更新编辑器
+  // Listen to content changes, update editor
   useEffect(() => {
     if (editor && content !== editor.getJSON()) {
       editor.commands.setContent(content || '')
