@@ -4,12 +4,26 @@ import { blogService, supabaseAdmin } from '@/lib/supabase'
 // GET /api/categories - Get all categories
 export async function GET() {
   try {
+    console.log('[API /api/categories] Fetching categories')
+    console.log('[API /api/categories] Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL?.substring(0, 30))
+
     const categories = await blogService.getCategories()
+
+    console.log('[API /api/categories] Success, returned', categories?.length || 0, 'categories')
     return NextResponse.json(categories)
-  } catch (error) {
-    console.error('Error fetching categories:', error)
+  } catch (error: any) {
+    console.error('[API /api/categories] Error:', {
+      message: error.message,
+      code: error.code,
+      details: error.details,
+      hint: error.hint
+    })
     return NextResponse.json(
-      { error: 'Failed to fetch categories' },
+      {
+        error: 'Failed to fetch categories',
+        details: error.message,
+        code: error.code
+      },
       { status: 500 }
     )
   }

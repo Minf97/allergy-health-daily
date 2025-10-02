@@ -12,24 +12,42 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get('status') // admin use to get drafts
     const includeAll = searchParams.get('includeAll') === 'true'
 
+    console.log('[API /api/blogs] Request params:', { page, pageSize, category, status, includeAll })
+    console.log('[API /api/blogs] Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL?.substring(0, 30))
+    console.log('[API /api/blogs] Has Anon Key:', !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
+
     let result
 
     if (includeAll) {
       // Admin get all blogs (including drafts)
+      console.log('[API /api/blogs] Fetching all blogs (admin)')
       result = await adminBlogService.getAllBlogs(page, pageSize)
     } else if (category) {
       // Get blogs by category
+      console.log('[API /api/blogs] Fetching by category:', category)
       result = await blogService.getBlogsByCategory(category, page, pageSize)
     } else {
       // Get published blogs
+      console.log('[API /api/blogs] Fetching published blogs')
       result = await blogService.getPublishedBlogs(page, pageSize)
     }
 
+    console.log('[API /api/blogs] Success, returned', result?.blogs?.length || 0, 'blogs')
     return NextResponse.json(result)
-  } catch (error) {
-    console.error('Error fetching blogs:', error)
+  } catch (error: any) {
+    console.error('[API /api/blogs] Error details:', {
+      message: error.message,
+      code: error.code,
+      details: error.details,
+      hint: error.hint,
+      stack: error.stack
+    })
     return NextResponse.json(
-      { error: 'Failed to fetch blogs' },
+      {
+        error: 'Failed to fetch blogs',
+        details: error.message,
+        code: error.code
+      },
       { status: 500 }
     )
   }
