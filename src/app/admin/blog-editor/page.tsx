@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { MainLayout } from '@/components/layout'
 import { ImageUpload } from '@/components/editor/ImageUpload'
@@ -11,7 +11,7 @@ import { Editor } from '@tiptap/react'
 const CACHE_KEY = 'blog-editor-draft'
 const AUTO_SAVE_INTERVAL = 30000 // 30 seconds
 
-export default function BlogEditorPage() {
+function BlogEditorContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const blogId = searchParams.get('id')
@@ -514,5 +514,12 @@ export default function BlogEditorPage() {
         </div>
       </div>
     </MainLayout>
+  )
+}
+export default function BlogEditorPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <BlogEditorContent />
+    </Suspense>
   )
 }

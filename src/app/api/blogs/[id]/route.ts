@@ -3,7 +3,7 @@ import { blogService, adminBlogService } from '@/lib/supabase'
 import { BlogFormData } from '@/types/blog'
 
 interface RouteParams {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }
 
 // GET /api/blogs/[id] - Get single blog
@@ -12,7 +12,7 @@ export async function GET(
   { params }: RouteParams
 ) {
   try {
-    const { id } = params
+    const { id } = await params
     const { searchParams } = new URL(request.url)
     const includeAll = searchParams.get('includeAll') === 'true'
 
@@ -49,7 +49,7 @@ export async function PUT(
   { params }: RouteParams
 ) {
   try {
-    const { id } = params
+    const { id } = await params
     const body: Partial<BlogFormData> = await request.json()
 
     // Prepare update data
@@ -91,7 +91,7 @@ export async function DELETE(
   { params }: RouteParams
 ) {
   try {
-    const { id } = params
+    const { id } = await params
 
     await adminBlogService.deleteBlog(id)
 

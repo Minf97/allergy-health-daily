@@ -1,12 +1,12 @@
 import { createClient } from '@supabase/supabase-js'
-import { Database, BlogPost } from '@/types/blog'
+import { BlogPost } from '@/types/blog'
 
 // Supabase configuration
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
 // Create Supabase client
-export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
     persistSession: true,
     autoRefreshToken: true,
@@ -16,8 +16,8 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
 // Admin client (for server-side operations)
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
 
-export const supabaseAdmin = createClient<Database>(
-  supabaseUrl, 
+export const supabaseAdmin = createClient(
+  supabaseUrl,
   supabaseServiceKey,
   {
     auth: {
@@ -117,7 +117,7 @@ export const blogService = {
 // Admin blog operations (requires authentication)
 export const adminBlogService = {
   // Create blog
-  async createBlog(blogData: Database['public']['Tables']['blogs']['Insert']) {
+  async createBlog(blogData: any) {
     const { data, error } = await supabaseAdmin
       .from('blogs')
       .insert(blogData)
@@ -132,7 +132,7 @@ export const adminBlogService = {
   },
 
   // Update blog
-  async updateBlog(id: string, blogData: Database['public']['Tables']['blogs']['Update']) {
+  async updateBlog(id: string, blogData: any) {
     const { data, error } = await supabaseAdmin
       .from('blogs')
       .update(blogData)

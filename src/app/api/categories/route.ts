@@ -19,7 +19,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    
+
     if (!body.name) {
       return NextResponse.json(
         { error: 'Category name is required' },
@@ -37,8 +37,8 @@ export async function POST(request: NextRequest) {
     const { data, error } = await supabaseAdmin
       .from('blog_categories')
       .insert({
-        name: body.name,
-        slug: slug
+        name: body.name as string,
+        slug: slug as string
       })
       .select()
       .single()
