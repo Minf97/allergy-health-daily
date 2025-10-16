@@ -22,7 +22,7 @@ export default function AuthPage() {
         if (data.success) {
             // Verification succeeded, saving to localStorage
             localStorage.setItem('isAuthed', 'true')
-            router.replace('/admin') // 跳回 admin 页面
+            router.replace('/admin') // back to admin page
         } else {
             setError('Incorrect password, please try again.')
         }
