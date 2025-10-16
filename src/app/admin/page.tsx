@@ -1,9 +1,25 @@
 'use client'
 
+import { useEffect,useState  } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { MainLayout } from '@/components/layout'
 
 export default function AdminPage() {
+  const router = useRouter()
+  const [checkedAuth, setCheckedAuth] = useState(false)
+
+  useEffect(() => {
+    const authed = localStorage.getItem('isAuthed')
+    if (!authed) {
+      router.replace('/admin/auth')
+    } else {
+      setCheckedAuth(true)
+    }
+  }, [router])
+
+  // Don't render the page before authentication is done
+  if (!checkedAuth) return null
   return (
     <MainLayout>
       <div className="max-w-4xl mx-auto px-4 py-8">
