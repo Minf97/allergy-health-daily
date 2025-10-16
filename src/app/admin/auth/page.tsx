@@ -20,7 +20,7 @@ export default function AuthPage() {
         const data = await res.json()
 
         if (data.success) {
-            // 验证成功，存入 localStorage
+            // Verification succeeded, saving to localStorage
             localStorage.setItem('isAuthed', 'true')
             router.replace('/admin') // 跳回 admin 页面
         } else {
